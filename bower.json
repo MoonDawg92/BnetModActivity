@@ -1,0 +1,19 @@
+{
+  "name": "BnetModeratorActivity",
+  "version": "0.0.0",
+  "description": "Track mod activity",
+  "authors": [
+    "MoonDawg"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#1.0.0"
+  }
+}
