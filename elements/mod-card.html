@@ -1,0 +1,118 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<dom-module id="mod-card">
+  <style>
+	table {
+		width: 50%;
+		background-color: rgba(255, 255, 255, 0.5);
+		padding: 7px;
+		border: 2px solid #000
+	
+	}
+  
+	img {
+		width: 125px; 
+		height: 125px; 
+		border: 1px solid; 
+		border-color:#000055; 
+		background-color: #777799; 
+		padding: 2px;
+	}
+  
+	a {
+		color: 000055;
+	}
+  
+	.mentor {
+		background-color: #F5F9FC; 
+		border: 2px solid #AAB8C3; 
+		color: #2a2a2a; 
+		text-align: center; 
+		width: 100px; 
+		margin-top: 20px;
+	}
+	
+	.ninja {
+		background-color: #ED9771; 
+		border: 2px solid #CE734B; 
+		color: #FFF; 
+		text-align: center; 
+		width: 100px; 
+		margin-top: 20px;
+	}
+	
+	.bungie {
+		background-color: #3C96DB; 
+		border: 2px solid #3280BB;
+		color: #FFF; 
+		text-align: center; 
+		width: 100px; 
+		margin-top: 20px;
+	}
+  
+  </style>
+  <template>	
+		<table align="center">
+		<tr>
+		<td style="width: 30%">
+		<img id="profilePic" src="[[url]]" style="margin-left: 7%" />
+		</td>
+		<td style="text-align: left; vertical-align: top; width: 40%">
+			<h2 style="margin-top: 20px">[[name]]</h2>
+			
+			<h4>Last Activity:</h4>
+			
+			<h4><a href="">Link to Profile</a>
+		</td>
+		<td style="vertical-align: top; width: 30%">
+			<h3 id="roleName">[[role]]</h3>
+		</td>
+		</tr>
+		
+		</table>
+  </template>
+
+  <script>
+    Polymer({
+      is: "mod-card",
+	  
+	  attached: function() {
+		if (this.role == 'Mentor')
+		{
+			this.$.roleName.classList.add('mentor');
+		}
+		if (this.role == 'Ninja')
+		{
+			this.$.roleName.classList.add('ninja');
+		}
+		if (this.role == 'Bungie')
+		{
+			this.$.roleName.classList.add('bungie');
+		}
+	  },
+	  
+	  properties: {
+		  name: {
+			type: String,
+			value: ""
+		  },
+		  
+		  role: {
+			type: String,
+			value: ""
+		  },
+		  
+		  url: {
+			type: String,
+			value: "http://www.bungie.net/img/profile/avatars/default_avatar.gif",
+			observer: "test"
+		  },
+	  },
+	  
+	  test: function() {
+		//alert(this.url);
+	  }
+    });
+  </script>
+
+</dom-module>
