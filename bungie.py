@@ -1,72 +1,67 @@
 import asyncio
 import aiohttp
+import json
  
 headers = {'X-API-Key' : 'd733b6d164864cc1b5aa3ff0e306e9a8'}  
 modList = []; 
  
 class Mod:
     
-    def __init__(self, name, role, url, active):
+    def __init__(self, name, role, url, active, memberid):
         self.name = name
         self.role = role
         self.url = 'http://www.bungie.net' + url
         self.active = active
-        
-    def getName(self):
-        return self.name
-        
-    def getRole(self):
-        return self.role
-        
-    def getUrl(self):
-        return self.url
-        
-    def getActive(self):
-        return self.active
+        self.memberid = memberid
+                
+class ModList:
+
+    def __init__(self, list):
+        self.list = list
  
+def encode_mod(obj):
+    if isinstance(obj, Mod):
+        return obj.__dict__
+    else:
+        raise TypeError("Unserializable object {} of type {}".format(obj, type(obj)))
  
 @asyncio.coroutine 
-def fetch_page(url, likes, posts, role):
-    #url = 'https://www.bungie.net/platform/User/GetBungieNetUserById/108762/'
+def fetch_page(url, likes, posts, role, memberid):
     global modList
     global headers
     
-    response = yield from aiohttp.request('GET', url, headers=headers)
-    likesTime = yield from aiohttp.request('GET', likes, headers=headers)
-    postsTime = yield from aiohttp.request('GET', posts, headers=headers)
+    connector = aiohttp.TCPConnector(verify_ssl=False)
+    
+    response = yield from aiohttp.request('GET', url, headers=headers, connector=connector)
+    likesTime = yield from aiohttp.request('GET', likes, headers=headers, connector=connector)
+    postsTime = yield from aiohttp.request('GET', posts, headers=headers, connector=connector)
     data = yield from response.json()
     timeData1 = yield from likesTime.json()
     timeData2 = yield from postsTime.json()
     
     if response.status == 200:
-        #print(data['Response']['displayName'])
+
         timeArr1 = timeData1['Response']['posts']
         timeArr2 = timeData2['Response']['posts']
-        #for x in timeArr1:
+        
         time1 = timeArr1[len(timeArr1)-1]['lastModified']
         time2 = timeArr2[len(timeArr2)-1]['lastModified']
         
         lastActive = time1 if (time1 > time2) else time2
-        #print(time1)
-        #print(time2)
-        #print(time1 > time2)
         
-        mod = Mod (data['Response']['displayName'], role, data['Response']['profilePicturePath'], lastActive)
+        #print (data['Response']['displayName'])
+        #print (time1)
+        #print (time2)
+        #print (lastActive)
+        #print ('')
+        
+        mod = Mod (data['Response']['displayName'], role, data['Response']['profilePicturePath'], lastActive, memberid)
         modList.append(mod)
-        print(mod.getName())
-        print(mod.getRole())
-        print(mod.getActive())
-        print()
-        
-    # else:
-        # print("data fetch failed for: %d" % idx)
-        # print(response.content, response.status)
         
     response.close()
     likesTime.close()
     postsTime.close()
-    
-    
+    connector.close()
     
 def main():
     mentorIds = [ 108762, 4878, 224480 ];
@@ -83,66 +78,25 @@ def main():
         profile = profileUrl + str(x)
         likes = likesUrl1 + str(x) + likesUrl2
         posts = postsUrl1 + str(x) + postsUrl2
-        coros.append(asyncio.Task(fetch_page(profile, likes, posts, "Mentor")))
+        coros.append(asyncio.Task(fetch_page(profile, likes, posts, "Mentor", x)))
     
     for x in ninjaIds:
         profile = profileUrl + str(x)
         likes = likesUrl1 + str(x) + likesUrl2
         posts = postsUrl1 + str(x) + postsUrl2
-        coros.append(asyncio.Task(fetch_page(profile, likes, posts, "Ninja")))
-
-    print("WAIT")
+        coros.append(asyncio.Task(fetch_page(profile, likes, posts, "Ninja", x)))
     
     yield from asyncio.gather(*coros)
     
-    print("DONE")
-    
-    for x in modList:
-        print(x.getName())
-        
-    return modList
-    
+    print("Content-Type: application/json")
+    print ('')
 
+    modList.sort(key=lambda r: r.active, reverse=True)
+    jsonModList = ModList(modList)
+    print(json.dumps(jsonModList.__dict__, default=encode_mod))
         
 if __name__ == '__main__':  
     loop = asyncio.get_event_loop()
     loop.run_until_complete(main())
  
- 
- 
-# def main(): 
-    #dictionary to hold extra headers
-    # HEADERS = {"X-API-Key":'d733b6d164864cc1b5aa3ff0e306e9a8'} 
-     
-    # mentorIds = [ 108762, 4878, 224480 ];
-    # ninjaIds = [ 2311, 218625, 7024 ];
-    # modList = [ ];
-     
-    # for x in mentorIds:
-        #r = requests.get("https://www.bungie.net/platform/User/GetBungieNetUserById/" + str(x), headers=HEADERS);
-        # r = async.get("https://www.bungie.net/platform/User/GetBungieNetUserById/" + str(x));
-        # response = r.json();
-        #print(response)
-        # mod = Mod(response['Response']['displayName'], "Mentor", response['Response']['profilePicturePath'])
-        # modList.append(mod)
-        
-    # for x in ninjaIds:
-        #r = requests.get("https://www.bungie.net/platform/User/GetBungieNetUserById/" + str(x), headers=HEADERS);
-        # r = async.get("https://www.bungie.net/platform/User/GetBungieNetUserById/" + str(x));
-        # response = r.json();
-        # mod = Mod(response['Response']['displayName'], "Ninja", response['Response']['profilePicturePath'])
-        # modList.append(mod)
-
-    # for y in modList:
-        # print(y.getName())
-     
-    #make request for Gjallarhorn
-    #r = requests.get("https://www.bungie.net/platform/Destiny/Manifest/InventoryItem/1274330687/", headers=HEADERS);
-     
-    #convert the json object we received into a Python dictionary object
-    #and print the name of the item
-    #inventoryItem = r.json()
-    #print(inventoryItem['Response']['data']['inventoryItem']['itemName'])
-     
-    #Gjallarhorn
 

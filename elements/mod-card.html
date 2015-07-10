@@ -57,14 +57,14 @@
 		<td style="width: 30%">
 		<img id="profilePic" src="[[url]]" style="margin-left: 7%" />
 		</td>
-		<td style="text-align: left; vertical-align: top; width: 40%">
+		<td style="text-align: left; vertical-align: top; width: 50%">
 			<h2 style="margin-top: 20px">[[name]]</h2>
 			
-			<h4>Last Activity:</h4>
+			<h4>Last Activity: <span>[[active]]</span></h4>
 			
-			<h4><a href="">Link to Profile</a>
+			<h4><a id="profileLink" href="#">Link to Profile</a>
 		</td>
-		<td style="vertical-align: top; width: 30%">
+		<td style="vertical-align: top; width: 20%">
 			<h3 id="roleName">[[role]]</h3>
 		</td>
 		</tr>
@@ -89,6 +89,11 @@
 		{
 			this.$.roleName.classList.add('bungie');
 		}
+
+        //alert(this.active);
+        var date = new Date(this.active);
+        //alert(date);
+        this.active = (date.getMonth()+1) + '/' + date.getDate() + '/' + date.getFullYear() + ' - ' + ('0'+date.getHours()).slice(-2) + ":" + ('0'+date.getMinutes()).slice(-2);
 	  },
 	  
 	  properties: {
@@ -105,13 +110,22 @@
 		  url: {
 			type: String,
 			value: "http://www.bungie.net/img/profile/avatars/default_avatar.gif",
-			observer: "test"
 		  },
+          
+          active: {
+            type: String,
+          },
+          
+          memberid: {
+            type: Number,
+            observer: "updateLink"
+          },
 	  },
 	  
-	  test: function() {
-		//alert(this.url);
+	  updateLink: function() {
+        this.$.profileLink.href='https://www.bungie.net/en/Profile/254/' + this.memberid;
 	  }
+      
     });
   </script>
 

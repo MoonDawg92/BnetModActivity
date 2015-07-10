@@ -4,98 +4,41 @@
 <dom-module id="track-activity">
   
   <template>	
-		<iron-ajax id="ajax" url="{{url}}" handle-as="json" header={{header}}></iron-ajax>
+		<iron-ajax id="ajax" url="../bungie.py" handle-as="json" on-response="bindData"></iron-ajax>
+        
+        <template is="dom-repeat" items={{data}}>
+            <mod-card name="{{item.name}}" url="{{item.url}}" role="{{item.role}}" active="{{item.active}}" memberid="{{item.memberid}}"></mod-card>
+            <br />
+        </template>
+        
   </template>
 
   <script>
-	var apiKey = "d733b6d164864cc1b5aa3ff0e306e9a8";
-  
-	var mentorIds = [ 108762, 4878, 224480 ];
-	var ninjaIds = [ 2311, 218625, 7024 ];
-	//var bungieIds = { };	Not sure if implementing yet
-
-	var cards = new Array();
-	
-	function getData1()
-	{
-		var xhr;
-	
-		for (i = 0; i < mentorIds.length; i++)
-		{
-			xhr = new XMLHttpRequest();
-			xhr.open("GET", "https://www.bungie.net/platform/User/GetBungieAccount/" + mentorIds[i] + "/254/", true);
-			xhr.setRequestHeader("X-API-Key", apiKey);
-			//xhr.withCredentials = true;
-			
-			xhr.onreadystatechange = function(){	 
-				if(this.readyState === 4 && this.status === 200)
-				{
-					var json = JSON.parse(this.responseText);
-					var data = json.Response;
-					console.log(data);  
-				}
-			}
-		 
-			xhr.send();
-		}
-		
-		//xhr.open("GET", "https://www.bungie.net/platform/Destiny/Manifest/InventoryItem/1274330687/", true);
-		
-		//xhr.open("GET", "https://www.bungie.net/platform/Activity/User/108762/Activities/LikesAndShares/?itemsperpage=50&currentpage=1", true);
-		//xhr.open("GET", "https://www.bungie.net/platform/Activity/User/108762/Activities/Forums/?itemsperpage=50&currentpage=1", true);
-		//xhr.open("GET", "https://www.bungie.net/platform/User/GetBungieNetUserById/108762/", true);
-		//xhr.open("GET", "https://www.bungie.net/platform/User/GetBungieAccount/108762/254/", true);
-		
-		//xhr.setRequestHeader("X-API-Key", apiKey);
-		 
-		//xhr.onreadystatechange = function(){
-		 //if(this.readyState === 4 && this.status === 200){
-		  //var json = JSON.parse(this.responseText);
-		  //var data = json.Response;
-		  //var data = json.Response.posts;
-		  //data = new Date(data[data.length-1].lastModified);
-		  //console.log(data);
-			
-		  //alert(data < new Date());
-		  
-		  
-		 //}
-		//}
-		 
-		//xhr.send();
-	}
-	
-	
-	
 	
     Polymer({
       is: "track-activity",
 	  
 	  attached: function() {
-		alert(mentorIds);
+		//alert('YO');
 		
-		getData1();
+		this.getData();
 	  },
 	  
 	  properties: {
 		  data: {
-			type: Array,
+			type: Object,
 		  }
 	  },
 	  
 	  getData: function() {
-	  
-		for (i = 0; i < mentorIds.length; i++)
-		{
-			this.url = "https://www.bungie.net/platform/User/GetBungieAccount/" + mentorIds[i] + "/254/";
-			this.header = { "Access-Control-Allow-Origin": "http://localhost:8080" };
-			this.$.ajax.generateRequest();
-		}
+            this.$.ajax.generateRequest();
 	  },
 	  
 	  bindData: function(e) {
-		alert("Bingo.");
-		console.log(e);
+		//alert("Bingo.");
+		console.log(e.detail.response);
+        
+        this.data = e.detail.response.list;
 	  }
 	  
     });
