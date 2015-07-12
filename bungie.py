@@ -2,7 +2,7 @@ import asyncio
 import aiohttp
 import json
  
-headers = {'X-API-Key' : 'd733b6d164864cc1b5aa3ff0e306e9a8'}  
+headers = {'X-API-Key' : 'API-KEY'}  
 modList = []; 
  
 class Mod:
