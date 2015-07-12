@@ -10,7 +10,7 @@ class Mod:
     def __init__(self, name, role, url, active, memberid):
         self.name = name
         self.role = role
-        self.url = 'http://www.bungie.net' + url
+        self.url = url
         self.active = active
         self.memberid = memberid
                 
@@ -64,8 +64,9 @@ def fetch_page(url, likes, posts, role, memberid):
     connector.close()
     
 def main():
-    mentorIds = [ 108762, 4878, 224480 ];
-    ninjaIds  = [ 2311, 218625, 7024 ];
+    mentorIds = [ 108762, 4878, 224480, 171080, 21405, 1093770, 50892, 407062, 7404833, 1172573, 54989, 5919496, 99413, 71571, 4471935, 964968, 3485923, 3537380, 111662, 37231 ];
+    ninjaIds  = [ 2311, 218625, 7957, 2653, 2336, 51262, 17925, 68974, 1774, 7777, 1189677, 76974, 31623, 7024, 3009, 1127, 3734, 7201, 1190716, 18290, 7137 ];
+    bungieIds = [ 5828411 ];
 
     profileUrl = 'https://www.bungie.net/platform/User/GetBungieNetUserById/'
     likesUrl1 = 'https://www.bungie.net/platform/Activity/User/'
@@ -85,6 +86,12 @@ def main():
         likes = likesUrl1 + str(x) + likesUrl2
         posts = postsUrl1 + str(x) + postsUrl2
         coros.append(asyncio.Task(fetch_page(profile, likes, posts, "Ninja", x)))
+        
+    for x in bungieIds:
+        profile = profileUrl + str(x)
+        likes = likesUrl1 + str(x) + likesUrl2
+        posts = postsUrl1 + str(x) + postsUrl2
+        coros.append(asyncio.Task(fetch_page(profile, likes, posts, "Bungie", x)))
     
     yield from asyncio.gather(*coros)
     

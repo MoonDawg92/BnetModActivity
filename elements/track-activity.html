@@ -1,10 +1,28 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/paper-spinner/paper-spinner.html">
 
 <dom-module id="track-activity">
   
+  <style>
+    paper-spinner {
+        --paper-spinner-layer-1-color: white;
+        --paper-spinner-layer-2-color: lightblue;
+        --paper-spinner-layer-3-color: cornflowerblue;
+        --paper-spinner-layer-4-color: blue;
+        width: 100px; 
+        height: 100px; 
+        margin-top: 100px; 
+        margin-bottom: 100px;
+      }
+  </style>
+  
   <template>	
-		<iron-ajax id="ajax" url="../bungie.py" handle-as="json" on-response="bindData"></iron-ajax>
+		<iron-ajax auto id="ajax" url="../bungie.py" handle-as="json" on-response="bindData" on-error="fail"></iron-ajax>
+        
+        <div id="loading" style="text-align: center">
+            <paper-spinner active></paper-spinner>
+        </div>
         
         <template is="dom-repeat" items={{data}}>
             <mod-card name="{{item.name}}" url="{{item.url}}" role="{{item.role}}" active="{{item.active}}" memberid="{{item.memberid}}"></mod-card>
@@ -17,28 +35,25 @@
 	
     Polymer({
       is: "track-activity",
-	  
-	  attached: function() {
-		//alert('YO');
-		
-		this.getData();
-	  },
-	  
+	   
 	  properties: {
 		  data: {
 			type: Object,
 		  }
 	  },
 	  
-	  getData: function() {
-            this.$.ajax.generateRequest();
-	  },
-	  
 	  bindData: function(e) {
 		//alert("Bingo.");
-		console.log(e.detail.response);
-        
+		//console.log(e);
+        this.$.loading.hidden = true;
         this.data = e.detail.response.list;
+	  },
+      
+      fail: function(e) {
+		//alert("No bueno.");
+        //console.log(e);
+		//console.log("D:");
+        location.reload();
 	  }
 	  
     });

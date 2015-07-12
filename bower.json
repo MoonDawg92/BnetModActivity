@@ -15,6 +15,7 @@
   ],
   "dependencies": {
     "polymer": "Polymer/polymer#1.0.0",
-    "iron-ajax": "PolymerElements/iron-ajax#1.0.0"
+    "iron-ajax": "PolymerElements/iron-ajax#1.0.0",
+    "paper-spinner": "PolymerElements/paper-spinner#1.0.0"
   }
 }

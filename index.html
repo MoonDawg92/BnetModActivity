@@ -9,55 +9,56 @@
 <style>
 	body {
 		background-image: url(images/background.png);
+        background-attachment: fixed;
 		background-size: 100% auto;
 		font-family: Verdana, Geneva, sans-serif;
 	}
+    
+    #fistLogo {
+        width: 100px; 
+        height: 100px;
+    }
+    
+    .title {
+        text-align: center; 
+        color: white;
+    }
+    
+    footer {
+        color: white; 
+        font-size: 0.9em; 
+        text-align: center;
+    }
 </style>
 
 <body>
-<!--<iron-ajax id="ajax" url="" handle-as="json" on-response="bindData"></iron-ajax>-->
-<h1 style="text-align: center; color: white">Moderator Activity</h1>
+
+<table align="center">
+    <tr>
+        <td rowspan="2">
+            <img id="fistLogo" src="/images/fist.png" />
+        </td>
+        <td>
+            <h1 class="title">Moderator Activity</h1>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <h4 class="title">Created By MoonDawg</h4>
+        </td>
+    </tr>
+</table>
+
 <track-activity></track-activity>
 
- <!--<mod-card name="MoonDawg" url="http://www.bungie.net/img/profile/avatars/admin/mentor_moondawg.gif" role="Mentor"></mod-card>
 <br />
-<mod-card name="Foman123" role="Ninja"></mod-card>
-<br />
-<mod-card name="Halcylon" role="Bungie"></mod-card>
-<br />
-<mod-card name="Spawn" role="Mentor"></mod-card> -->
+<footer>
+    <p>Activity is estimated based on user's most recent post/like. Only works if user's post history is public.</p>
+    <p>This site is not affiliated with Bungie.net or Activision.</p>
+</footer>
 
 </body>
 
-<script>
-
-(function() {
-	//alert('Hello World');
-})();
-
-/*
-Polymer({
-	  
-	  attached: function() {
-		alert("hi");
-		
-		//this.$.ajax.generateResponse();
-	  },
-	  
-	  properties: {
-		  data: {
-			type: Array,
-		  }
-	  },
-	  	  
-	  bindData: function(e) {
-		alert("Bingo.");
-		console.log(e);
-	  }
-	  
-    });*/
-
-</script>
 </html>
 
 

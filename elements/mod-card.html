@@ -110,6 +110,7 @@
 		  url: {
 			type: String,
 			value: "http://www.bungie.net/img/profile/avatars/default_avatar.gif",
+            observer: "concatPath"
 		  },
           
           active: {
@@ -124,7 +125,13 @@
 	  
 	  updateLink: function() {
         this.$.profileLink.href='https://www.bungie.net/en/Profile/254/' + this.memberid;
-	  }
+	  },
+      
+      concatPath: function () {
+        // Checks to see if URL is from Bungie.next
+        if(this.url[0] == '/')
+            this.url = 'http://www.bungie.net' + this.url;
+      }
       
     });
   </script>
